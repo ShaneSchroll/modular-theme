@@ -3,7 +3,6 @@
 	position: relative;
 	padding: 1rem 2rem;
 	max-width: 100%;
-	@include bp(850px) { position: relative; }
 
 	.close-notice {
 		color: $white;

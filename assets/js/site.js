@@ -1,4 +1,4 @@
-// Shane Schroll
+// Author: Shane Schroll
 (function($) {
     $(document).ready(function() {
 
@@ -12,7 +12,7 @@
 		});
 
 		// Datatables setup - https://datatables.net/manual/
-		$table = $('.datatable');
+		$table = $('#datatable');
 		$table.DataTable();
 
 		$(function customFacetSettings() {
@@ -21,7 +21,7 @@
 				$('.facetwp-template').prepend('<div class="is-loading"><span class="is-loading__icon"></span></div>');
 			});
 
-			// // once a search is made, filtering turns into a "live filter"
+			// once a search is made, filtering turns into a "live filter"
 			$document.on('facetwp-loaded', function() {
 				$('.facetwp-template .is-loading').remove();
 			});
@@ -50,7 +50,7 @@
 					});
 				}
 				// always fire
-				$(this).toggleClass('chevron-rotate');
+				$(this).toggleClass('plus-rotate');
 			});
 		});
 	}); // end Document.Ready

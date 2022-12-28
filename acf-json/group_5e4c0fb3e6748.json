@@ -1,0 +1,62 @@
+{
+    "key": "group_5e4c0fb3e6748",
+    "title": "Theme Options - General",
+    "fields": [
+        {
+            "key": "field_60d7e7b5339c5",
+            "label": "Mission Statement",
+            "name": "mission_statement",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_609d8769915fb",
+            "label": "Google Search Description",
+            "name": "google_search_description",
+            "type": "textarea",
+            "instructions": "Shows up under your site listing on Google. Please allow up to 24 hours for this to be reflected in Google's search results.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": 4,
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-theme-options"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1630836362
+}

@@ -1,0 +1,77 @@
+* { box-sizing: border-box; }
+html { font-size: 16px; } // 16px = 1rem (base font setup)
+
+html, body {
+	// font antialiasing
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	line-height: 1.5;
+	overflow-x: hidden;
+
+	font-variant-numeric: lining-nums;
+	-moz-font-feature-settings: "lnum" 1; // fallback for firefox (>70)
+	-webkit-font-feature-settings: "lnum" 1; // fallback for chrome/edge/safari (>63)
+	font-feature-settings: "lnum" 1; // new standard for browsers
+}
+
+// sitewide placeholder text
+::placeholder {
+	color: $light-black;
+	opacity: 0.8;
+	font-style: italic;
+	font-size: 1rem; // 16px
+}
+
+// base image setup - always keep aspect ratio intact by default
+img {
+	display: block; // removes white space below images
+	max-width: 100%;
+	height: auto;
+}
+
+// unset standard button styles
+button {
+	background: unset;
+	border: unset;
+	&:hover { cursor: pointer; }
+}
+
+// core site wrapper (core site content wrapper)
+.core-post-wrapper {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+// default page content area
+.content-block {
+	max-width: 77rem;
+	margin: 2rem auto 0;
+	padding: 1rem 1.25rem;
+}
+
+.alignfull {
+	margin: 1rem calc(50% - 50vw);
+	max-width: 100vw;
+	width: 100vw;
+}
+
+// default api content area
+.api-content {
+	max-width: 100%;
+	margin: 0 auto 2rem;
+	font-family: $font;
+
+	&__head, &__body {
+		padding: 1rem 1.25rem;
+		font-family: inherit;
+	}
+
+	&__head {
+		font-size: 1.25rem;
+	}
+
+	&__body {
+		font-size: 1rem;
+	}
+}

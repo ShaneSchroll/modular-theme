@@ -1,0 +1,29 @@
+// Base Colors
+$black: #000;
+$white: #fff;
+$light-black: #3e3e3e;
+$light-grey: #ebebeb;
+$red: #83010d;
+$green: #0c8700;
+
+// Theme Colors
+
+// Fonts
+$font: 'Montserrat', sans-serif;
+
+// Breakpoint Mixin
+@mixin bp($size) {
+	@if $size == xs {
+		@media (min-width: 480px) { @content; }
+	} @else if $size == sm {
+		@media (min-width: 768px) { @content; }
+	} @else if $size == md {
+		@media (min-width: 1023px) { @content; }
+	} @else if $size == lg {
+		@media (min-width: 1200px) { @content; }
+	} @else if $size == xl {
+		@media (min-width: 1340px) { @content; }
+	} @else {
+		@media (min-width: $size) { @content; }
+	}
+}

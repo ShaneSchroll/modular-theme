@@ -1,0 +1,20 @@
+/*!
+	Author: Shane Schroll
+	Theme Name: Modular
+	Description: Custom blocks.
+	Version: 1.0.6
+	Text Domain: mod
+*/
+
+body {
+	// Imports
+	@import '../variables';	    // all variables and mixins
+	@import '../globals';		// all global styles
+	@import '../typography';	// all typography styles
+
+	// Blocks
+	@import 'accordion-block'; 	// accordion block
+	@import 'buttons';		   	// all buttons
+
+	@import 'color-palette';   	// theme colors only
+}

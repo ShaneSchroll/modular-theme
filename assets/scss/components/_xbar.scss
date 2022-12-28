@@ -1,0 +1,52 @@
+// mobile menu toggle X
+#menu-toggle {
+	position: relative;
+	display: block;
+	z-index: 99999;
+
+	&:hover {
+		cursor: pointer;
+		.x-bar { background-color: $light-black; }
+	}
+
+	.x-bar {
+		position: relative;
+		display: block;
+		top: 0.2rem;
+		height: 3px;
+		margin-bottom: 5px;
+		margin-right: 0;
+		margin-left: auto;
+		background-color: $light-black;
+		transition: 0.2s ease-in;
+		border-radius: 2px;
+		&:nth-child(3n+1) { width: 1.75rem; }
+		&:nth-child(3n+2) { width: 1.75rem; }
+		&:nth-child(3n+3) { width: 1.75rem; margin-bottom: 0; }
+	}
+
+	.x-bar-active {
+		position: relative;
+		transition: 0.2s ease-out;
+		margin-bottom: 0;
+		height: 3px;
+
+		&:nth-child(3n+1) {
+			top: 0.35rem;
+			transform: rotate(-180deg) rotate(45deg); // flip left
+			background-color: $light-black;
+		}
+
+		// hide this one
+		&:nth-child(3n+2) {
+			opacity: 0;
+		}
+
+		&:nth-child(3n+3) {
+			top: 0;
+			transform: rotate(180deg) rotate(-45deg); // flip right
+			margin-bottom: 0;
+			background-color: $black;
+		}
+	}
+} // end [#menu-toggle]

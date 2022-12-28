@@ -1,0 +1,66 @@
+// core font setup
+a, p, span, address, table, td,
+small, time, ol, ul, li {
+	font-family: $font;
+	font-size: 1rem;
+	font-weight: 400;
+	color: $light-black;
+}
+
+small, time { font-size: 0.875rem; } // 14px
+
+a {
+	text-decoration: none;
+	transition: 0.2s ease-out;
+	&:hover { transition: 0.2s ease-out; }
+}
+
+// helper classes
+.text {
+	&-semibold { font-weight: 500; }
+	&-bold { font-weight: bold; }
+	&-italic { font-style: italic; }
+	&-center { text-align: center; }
+	&-left { text-align: left; }
+	&-right { text-align: right; }
+}
+
+h1, h2, h3,
+h4, h5, h6 {
+	margin-top: 1.5rem;
+	margin-bottom: 1rem;
+	font-family: $font;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+h1 {
+	font-size: 2rem;
+	@include bp(xs) { font-size: 2.25rem; }
+	@include bp(sm) { font-size: 2.75rem; }
+	@include bp(md) { font-size: 3.25rem; }
+}
+
+h2 {
+	font-size: 1.75rem; // 28px base
+	@include bp(xs) { font-size: 2rem; }
+	@include bp(sm) { font-size: 2.25rem; }
+	@include bp(md) { font-size: 2.75rem; }
+}
+
+h3 {
+	font-size: 1.5rem; // 24px base
+	@include bp(xs) { font-size: 1.75rem; }
+	@include bp(sm) { font-size: 2rem; }
+	@include bp(md) { font-size: 2.25rem; }
+}
+
+h4 {
+	font-size: 1.25rem; // 20px base
+	@include bp(xs) { font-size: 1.5rem; }
+	@include bp(sm) { font-size: 1.75rem; }
+	@include bp(md) { font-size: 2rem; }
+}
+
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }

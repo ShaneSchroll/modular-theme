@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="" lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		{# Optional custom description. #}
+		{% if options.google_search_description %}
+			<meta name="description" content="{{ options.google_search_description }}">
+		{% endif %}
+
+		<title>{{ post.title }} | {{ site.name }}</title>
+
+		{{ function('wp_head') }}
+
+		{% if is_singular %}
+			<link rel="canonical" href="{{ post.link }}">
+		{% endif %}
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600;1,700&display=swap"> 
+	</head>
+
+	<body data-template="base.twig" class="{{ body_class }}">
+		{% if options.enable_banner %}
+			<div class="notice-banner" style="background-color:{{ options.background_color }};">
+				<button class="close-notice">&times;</button>
+				<p>{{ options.banner_text }}</p>
+			</div>
+		{% endif %}
+
+		{% include 'navigation.twig' %}
+		{% include 'header.twig' %}
+
+		<section id="app" class="core-post-wrapper" role="main" aria-label="Main Content Section">
+			{% block content %}{% endblock %}
+		</section>
+
+		{% include 'footer.twig' %}
+		{% include 'external-scripts.twig' %}
+		{{ function('wp_footer') }}
+	</body>
+</html>

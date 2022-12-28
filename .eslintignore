@@ -1,0 +1,7 @@
+temp.js
+**/vendor/*.js
+node_modules/
+package.json
+package-lock.json
+composer.lock
+composer.json

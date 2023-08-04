@@ -2,7 +2,7 @@
 	Author: Shane Schroll
 	Theme Name: Modular
 	Description: Modular theme and blocks.
-	Version: 1.1.0
+	Version: 1.2.7
 	Text Domain: mod
 */
 
@@ -19,7 +19,6 @@
 @import 'components/xbar'; 			// navigation x-bar style and animation
 @import 'components/notice-banner'; // top of page notice banner
 @import 'components/social-links'; 	// flexible social icon row
-@import 'components/facet-wp';		// style overrides for FacetWP
 
 // Import Chunks
 @import 'navigation';				// main site naviagtion - desktop+mobile

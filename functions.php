@@ -73,7 +73,6 @@ class MODSite extends TimberSite {
 		wp_enqueue_script( 'mfp-js', get_template_directory_uri() . '/assets/js/mfp.min.js', ['jquery'], '1.1.0' );
 		wp_enqueue_script( 'datatables-js', get_template_directory_uri() . '/assets/js/datatables.js', ['jquery'], '1.13.1' );
 		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery', 'slick-js', 'mfp-js', 'datatables-js'], $version );
-		wp_enqueue_script( 'vue-js', get_template_directory_uri() . '/assets/js/vue.js', [], $version );
 		wp_enqueue_script( 'theme-editor', get_template_directory_uri() . '/assets/js/editor.js', [], $version );
 	}
 
@@ -102,44 +101,6 @@ class MODSite extends TimberSite {
 		add_theme_support( 'editor-styles' );
 		add_editor_style( 'custom-blocks.css' );
 		add_theme_support( 'disable-custom-colors' );
-
-		add_theme_support( 'editor-color-palette', [
-			[
-				'name'  => __( 'Black', 'mod' ),
-				'slug'  => 'black',
-				'color'	=> '#000',
-			],
-
-			[
-				'name'  => __( 'White', 'mod' ),
-				'slug'  => 'white',
-				'color'	=> '#fff',
-			],
-
-			[
-				'name'  => __( 'Light Black', 'mod' ),
-				'slug'  => 'light-black',
-				'color'	=> '#3E3E3E',
-			],
-
-			[
-				'name'  => __( 'Light Grey', 'mod' ),
-				'slug'  => 'light-grey',
-				'color'	=> '#EBEBEB',
-			],
-
-			[
-				'name'  => __( 'Red (warning)', 'mod' ),
-				'slug'  => 'red',
-				'color'	=> '#83010D',
-			],
-
-			[
-				'name'  => __( 'Green (success)', 'mod' ),
-				'slug'  => 'green',
-				'color'	=> '#0c8700',
-			],
-		]);
 
 		// create option pages for things like footer data and company info/logos
 		if( function_exists( 'acf_add_options_page' ) ) {
@@ -198,13 +159,15 @@ class MODSite extends TimberSite {
 		include_once('custom-post-types/post-type-rename.php');
 	}
 
-	// remove unused items from admin menu (delete this function and the action hook to show these)
+	// remove unused items from admin menu
+	// to show Posts and Comments Admin Pages - delete this function and the action hook
 	function admin_menu_cleanup() {
 		remove_menu_page( 'edit.php' ); // Posts
 		remove_menu_page( 'edit-comments.php' ); // Comments
 	}
 
-	// removed comment column from posts pages (delete this function and the action hook to show comment counts)
+	// removed comment column from posts pages
+	// to show comment counts - delete this function and the action hook
 	function remove_pages_count_columns( $defaults ) {
 		unset($defaults['comments']);
 		return $defaults;
@@ -213,7 +176,7 @@ class MODSite extends TimberSite {
 
 new MODSite();
 
-// top site navigation
+// primary site navigation
 function mod_render_primary_menu() {
 	wp_nav_menu([
 		'theme_location' => 'primary',
@@ -222,75 +185,11 @@ function mod_render_primary_menu() {
 	]);
 }
 
-// footer site navigation
+// secondary site navigation
 function mod_render_secondary_menu() {
 	wp_nav_menu([
 		'theme_location' => 'secondary',
 		'container'      => false,
 		'menu_id'        => 'secondary-menu',
 	]);
-}
-
-// read data from our API, callable only from within the theme
-function read_api_json() {
-
-	// setup our headers with the request so we can handoff our oAuth token and get data back
-	$token = 'TOKEN_NAME';
-	$headers = [
-		'Content-Type' => 'application/json',
-		'Authorization' => "Bearer $token"
-	];
-
-	// see if our cookie is up to date. If not, get new data
-	$api = get_transient( 'api_cookie' );
-
-	// get api data & error checking
-	if( empty($api) ) {
-
-		$response = wp_remote_get( 'API_URL', [ 'headers' => $headers ]);
-
-		if( is_wp_error($response) ) {
-			if( WP_DEBUG ) {
-				echo '<pre style="width: 100%; margin: 0 auto;">';
-				echo var_dump($response);
-				echo '</pre>';
-			} else {
-				return array();
-			}
-		}
-
-		// reassign our $api variable to the JSON response (needed for transients to work)
-		$api = json_decode( wp_remote_retrieve_body($response), true );
-
-		// inner check once we have JSON data
-		if( empty($api) ) {
-			return array();
-		}
-
-		// update cookie every 4 hours, this will also set the cookie if it doesn't exist
-		set_transient( 'api_cookie', $api, 4 * HOUR_IN_SECONDS );
-	}
-
-	// reference for JSON array structure, comment when done viewing
-	echo '<pre style="width: 100%; margin: 0 auto;">'; echo var_dump($api); echo '</pre>';
-
-	if( !empty($api) ) : ?>
-		<section class="api-wrapper">
-			<?php
-			foreach( $api['reviews'] as $key => $val ) :
-				$reviews = $api['reviews'][$key];
-
-				// trim the reviews so the cards don't become super tall
-				$trimmed_review = wp_trim_words( $reviews['reviewText'], 36, '...' );
-				?>
-				<div class="api-content">
-					<div class="api-content__head"></div>
-
-					<div class="api-content__body">
-						<p><?= $trimmed_review; ?></p>
-					</div>
-				</div>
-			<?php endforeach; ?>
-		</section>
-	<?php endif;
 }

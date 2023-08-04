@@ -3,15 +3,10 @@ html { font-size: 16px; } // 16px = 1rem (base font setup)
 
 html, body {
 	// font antialiasing
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 	line-height: 1.5;
 	overflow-x: hidden;
-
 	font-variant-numeric: lining-nums;
-	-moz-font-feature-settings: "lnum" 1; // fallback for firefox (>70)
-	-webkit-font-feature-settings: "lnum" 1; // fallback for chrome/edge/safari (>63)
 	font-feature-settings: "lnum" 1; // new standard for browsers
 }
 

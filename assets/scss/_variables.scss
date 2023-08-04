@@ -1,15 +1,15 @@
-// Base Colors
+// Colors
 $black: #000;
 $white: #fff;
 $light-black: #3e3e3e;
 $light-grey: #ebebeb;
-$red: #83010d;
-$green: #0c8700;
-
-// Theme Colors
+$danger: #83010d;
+$success: #0c8700;
 
 // Fonts
 $font: 'Montserrat', sans-serif;
+// $font-header: '';
+// $font-body: '';
 
 // Breakpoint Mixin
 @mixin bp($size) {

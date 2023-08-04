@@ -2,8 +2,6 @@
 (function($) {
     $(document).ready(function() {
 
-		let $document = $(document);
-
 		$(function noticeBanner() {
 			// notice close function
 			$('.notice-banner .close-notice').on('click', function() {
@@ -11,21 +9,9 @@
 			});
 		});
 
-		// Datatables setup - https://datatables.net/manual/
+		// Datatables setup
 		$table = $('#datatable');
 		$table.DataTable();
-
-		$(function customFacetSettings() {
-			// show a loading symbol for filters once the dataset becomes larger
-			$document.on('facetwp-refresh', function() {
-				$('.facetwp-template').prepend('<div class="is-loading"><span class="is-loading__icon"></span></div>');
-			});
-
-			// once a search is made, filtering turns into a "live filter"
-			$document.on('facetwp-loaded', function() {
-				$('.facetwp-template .is-loading').remove();
-			});
-		});
 
 		// accessible accordion block - controls and aria events for screenreaders
 		$(function accordionBlock() {

@@ -14,18 +14,19 @@ class MODSite extends TimberSite {
 
 	function __construct() {
 		// Actions //
-		add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_head', [ $this, 'admin_head_css' ] );
-		add_action( 'admin_menu', [ $this, 'admin_menu_cleanup'] );
-		add_action( 'init', [ $this, 'register_post_types' ] );
-		add_action( 'login_enqueue_scripts', [ $this, 'style_login' ] );
-		add_action( 'acf/init', [ $this, 'render_custom_acf_blocks' ] );
+		add_action( 'after_setup_theme', [$this, 'after_setup_theme'] );
+		add_action( 'wp_enqueue_scripts', [$this, 'mod_enqueue_scripts'] );
+		add_action( 'admin_head', [$this, 'admin_head_css'] );
+		add_action( 'admin_menu', [$this, 'admin_menu_cleanup'] );
+		add_action( 'init', [$this, 'register_post_types'] );
+		add_action( 'login_enqueue_scripts', [$this, 'style_login'] );
+		add_action( 'acf/init', [$this, 'render_custom_acf_blocks'] );
+		add_action( 'enqueue_block_editor_assets', [$this, 'mod_enqueue_editor_scripts'] );
 
 		// Filters //
-		add_filter( 'timber_context', [ $this, 'add_to_context' ] );
-		add_filter( 'block_categories', [ $this, 'mod_block_category' ], 10, 2 );
-		add_filter( 'manage_pages_columns', [ $this, 'remove_pages_count_columns'] );
+		add_filter( 'timber_context', [$this, 'add_to_context'] );
+		add_filter( 'block_categories', [$this, 'mod_block_category'], 10, 2 );
+		add_filter( 'manage_pages_columns', [$this, 'remove_pages_count_columns'] );
 
 		parent::__construct();
 	}
@@ -65,15 +66,16 @@ class MODSite extends TimberSite {
 	}
 
 	// enqueue styles & scripts
-	function enqueue_scripts() {
+	function mod_enqueue_scripts() {
 		$version = filemtime( get_stylesheet_directory() . '/style.css' );
 		wp_enqueue_style( 'core-css', get_stylesheet_directory_uri() . '/style.css', [], $version );
-		wp_enqueue_style( 'block-css', get_stylesheet_directory_uri() . '/custom-blocks.css', [], $version );
-		wp_enqueue_script( 'slick-js', get_template_directory_uri() . '/assets/js/slick.min.js', ['jquery'], '1.8.1' );
-		wp_enqueue_script( 'mfp-js', get_template_directory_uri() . '/assets/js/mfp.min.js', ['jquery'], '1.1.0' );
 		wp_enqueue_script( 'datatables-js', get_template_directory_uri() . '/assets/js/datatables.js', ['jquery'], '1.13.1' );
-		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery', 'slick-js', 'mfp-js', 'datatables-js'], $version );
-		wp_enqueue_script( 'theme-editor', get_template_directory_uri() . '/assets/js/editor.js', [], $version );
+		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery', 'slick-js', 'datatables-js'], $version );
+	}
+
+	// enqueue block editor styles
+	function mod_enqueue_editor_scripts() {
+		wp_enqueue_style( 'editor-css', get_stylesheet_directory_uri() . '/custom-blocks.css', [], $version );
 	}
 
 	// Custom context helper functions (callable)
@@ -93,8 +95,8 @@ class MODSite extends TimberSite {
 	// Menus / Theme Support / ACF Options Page
 	function after_setup_theme() {
 		add_theme_support( 'menus' );
-		register_nav_menu( 'primary', 'Top Navigation' );
-		register_nav_menu( 'secondary', 'Footer Navigation' );
+		register_nav_menu( 'primary', 'Primary Navigation' );
+		register_nav_menu( 'secondary', 'Secondary Navigation' );
 
 		add_theme_support( 'align-wide' );
 		add_theme_support( 'post-thumbnails' );
@@ -102,7 +104,7 @@ class MODSite extends TimberSite {
 		add_editor_style( 'custom-blocks.css' );
 		add_theme_support( 'disable-custom-colors' );
 
-		// create option pages for things like footer data and company info/logos
+		// create an acf option page section
 		if( function_exists( 'acf_add_options_page' ) ) {
 			$parent = acf_add_options_page([
 				'page_title'      => 'Main Options',
@@ -127,13 +129,6 @@ class MODSite extends TimberSite {
 				'menu_title'  => __( 'Contact' ),
 				'parent_slug' => $parent['menu_slug'],
 			]);
-
-			// Social Settings
-			$child = acf_add_options_sub_page([
-				'page_title'  => __( 'Social Settings' ),
-				'menu_title'  => __( 'Social' ),
-				'parent_slug' => $parent['menu_slug'],
-			]);
 		}
 	}
 
@@ -142,7 +137,7 @@ class MODSite extends TimberSite {
 		require 'custom-block-functions.php';
 	}
 
-	// creates a custom block category for our theme-specific blocks
+	// create a custom block category for our theme-specific blocks
 	function mod_block_category( $categories, $post ) {
 		return array_merge(
 			$categories, [
@@ -160,14 +155,12 @@ class MODSite extends TimberSite {
 	}
 
 	// remove unused items from admin menu
-	// to show Posts and Comments Admin Pages - delete this function and the action hook
 	function admin_menu_cleanup() {
 		remove_menu_page( 'edit.php' ); // Posts
 		remove_menu_page( 'edit-comments.php' ); // Comments
 	}
 
 	// removed comment column from posts pages
-	// to show comment counts - delete this function and the action hook
 	function remove_pages_count_columns( $defaults ) {
 		unset($defaults['comments']);
 		return $defaults;
@@ -193,3 +186,26 @@ function mod_render_secondary_menu() {
 		'menu_id'        => 'secondary-menu',
 	]);
 }
+
+/**
+ * Disable extra scripts and styles loaded by WordPress (frontend)
+*/
+function mod_disable_extra_scripts_frontend() {
+	// disable emoji scripts
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+	remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+	// disable jQuery Migrate
+
+}
+add_action( 'init', 'mod_disable_extra_scripts_frontend' );
+
+/**
+ * Disable extra scripts and styles loaded by WordPress (backend)
+ * only loaded for the admin area
+*/
+function mod_disable_extra_scripts_admin() {
+	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+	remove_action( 'admin_print_styles', 'print_emoji_styles' );
+}
+add_action( 'admin_init', 'mod_disable_extra_scripts_admin' );

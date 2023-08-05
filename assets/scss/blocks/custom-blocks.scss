@@ -2,14 +2,13 @@
 	Author: Shane Schroll
 	Theme Name: Modular
 	Description: Custom blocks.
-	Version: 1.0.6
+	Version: 1.1.0
 	Text Domain: mod
 */
 
 body {
 	// Imports
 	@import '../variables';	    // all variables and mixins
-	@import '../globals';		// all global styles
 	@import '../typography';	// all typography styles
 
 	// Blocks

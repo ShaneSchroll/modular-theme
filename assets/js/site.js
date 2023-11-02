@@ -9,10 +9,6 @@
 			});
 		});
 
-		// Datatables setup
-		$table = $('#datatable');
-		$table.DataTable();
-
 		// accessible accordion block - controls and aria events for screenreaders
 		$(function accordionBlock() {
 			$('.accordion-content').each(function() {

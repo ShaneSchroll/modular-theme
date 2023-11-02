@@ -1,9 +1,15 @@
 <?php
 
-// change 'views' directory to 'templates'
+// Load Timber
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Initialize timber
+Timber\Timber::init();
+
+// Change 'views' directory to 'templates'
 Timber::$locations = __DIR__ . '/templates';
 
-class MODSite extends TimberSite {
+class MODSite extends Timber\Site {
 
 	// site class constructor
 	function __construct() {
@@ -81,8 +87,7 @@ class MODSite extends TimberSite {
 	function mod_enqueue_scripts() {
 		$version = filemtime( get_stylesheet_directory() . '/style.css' );
 		wp_enqueue_style( 'mod-css', get_stylesheet_directory_uri() . '/style.css', [], $version );
-		wp_enqueue_script( 'mod-datatables-js', get_template_directory_uri() . '/assets/js/datatables.js', ['jquery'], '1.13.1' );
-		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery', 'mod-datatables-js'], $version );
+		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery'], $version );
 
 		if( ! is_admin() ) {
 			wp_dequeue_style( 'wp-block-library' );
@@ -99,10 +104,9 @@ class MODSite extends TimberSite {
 	// Custom context helper functions
 	function add_to_context( $context ) {
 		$context['site']           = $this;
-		$context['date']           = date( 'F j, Y' );
-		$context['date_year']      = date( 'Y' );
-		$context['options']        = get_fields( 'option' );
-		$context['home_url']       = home_url( '/' );
+		$context['date']           = date('F j, Y');
+		$context['date_year']      = date('Y');
+		$context['home_url']       = home_url('/');
 		$context['is_front_page']  = is_front_page();
 		$context['is_singular']    = is_singular();
 		$context['get_url']        = $_SERVER['REQUEST_URI'];
@@ -114,7 +118,6 @@ class MODSite extends TimberSite {
 	function after_setup_theme() {
 		add_theme_support( 'menus' );
 		register_nav_menu( 'primary', 'Primary Navigation' );
-		register_nav_menu( 'secondary', 'Secondary Navigation' );
 
 		add_theme_support( 'align-wide' );
 		add_theme_support( 'post-thumbnails' );
@@ -195,35 +198,6 @@ function mod_render_primary_menu() {
 		'menu_id'        => 'primary-menu',
 	]);
 }
-
-// secondary site navigation
-function mod_render_secondary_menu() {
-	wp_nav_menu([
-		'theme_location' => 'secondary',
-		'container'      => false,
-		'menu_id'        => 'secondary-menu',
-	]);
-}
-
-/**
- * Disable extra scripts and styles loaded by WordPress (frontend)
-*/
-function mod_disable_extra_scripts_frontend() {
-	// disable emoji scripts
-	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-	remove_action( 'wp_print_styles', 'print_emoji_styles' );
-}
-add_action( 'init', 'mod_disable_extra_scripts_frontend' );
-
-/**
- * Disable extra scripts and styles loaded by WordPress (backend)
- * only loaded for the admin area
-*/
-function mod_disable_extra_scripts_admin() {
-	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-	remove_action( 'admin_print_styles', 'print_emoji_styles' );
-}
-add_action( 'admin_init', 'mod_disable_extra_scripts_admin' );
 
 // disable jQuery Migrate
 function mod_disable_jqmigrate($scripts) {

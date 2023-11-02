@@ -1,36 +1,55 @@
 <?php
 
-// change 'views' directory to 'templates'
+// Load Timber
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Initialize timber
+Timber\Timber::init();
+
+// Change 'views' directory to 'templates'
 Timber::$locations = __DIR__ . '/templates';
 
-class MODSite extends TimberSite {
+class MODSite extends Timber\Site {
 
-	/**
-	 * To add items to the site class, first add an action hook to the constructor, plus your custom function name
-	 * then create your function outside of the constructor
-
-	 * To add global actions or filters, put both the hook and function outside of this site class
-	*/
-
+	// site class constructor
 	function __construct() {
 		// Actions //
-		add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_head', [ $this, 'admin_head_css' ] );
-		add_action( 'admin_menu', [ $this, 'admin_menu_cleanup'] );
-		add_action( 'init', [ $this, 'register_post_types' ] );
-		add_action( 'login_enqueue_scripts', [ $this, 'style_login' ] );
-		add_action( 'acf/init', [ $this, 'render_custom_acf_blocks' ] );
+		add_action( 'after_setup_theme', [$this, 'after_setup_theme'] );
+		add_action( 'wp_enqueue_scripts', [$this, 'mod_enqueue_scripts'] );
+		add_action( 'admin_head', [$this, 'admin_head_css'] );
+		add_action( 'admin_menu', [$this, 'admin_menu_cleanup'] );
+		add_action( 'admin_init', [$this, 'mod_no_trackbacks'] );
+		add_action( 'init', [$this, 'register_post_types'] );
+		add_action( 'login_enqueue_scripts', [$this, 'style_login'] );
+		add_action( 'acf/init', [$this, 'render_custom_acf_blocks'] );
+		add_action( 'enqueue_block_editor_assets', [$this, 'mod_enqueue_editor_scripts'] );
 
-		// Filters //
-		add_filter( 'timber_context', [ $this, 'add_to_context' ] );
-		add_filter( 'block_categories', [ $this, 'mod_block_category' ], 10, 2 );
-		add_filter( 'manage_pages_columns', [ $this, 'remove_pages_count_columns'] );
+		if( is_admin_bar_showing() ) {
+			remove_action( 'admin_bar_menu', [$this, 'wp_admin_bar_comments_menu'], 60 );
+		}
+
+		// Custom Filters //
+		add_filter( 'timber_context', [$this, 'add_to_context'] );
+		add_filter( 'block_categories', [$this, 'mod_block_category'], 10, 2 );
+		add_filter( 'manage_pages_columns', [$this, 'remove_pages_count_columns'] );
+
+		// General Filters //
+		add_filter( 'comments_open', '__return_false', 20, 2 );
+		add_filter( 'pings_open', '__return_false', 20, 2 );
 
 		parent::__construct();
 	}
 
-	// hide WP update nag
+	function mod_no_trackbacks() {
+		foreach( get_post_types() as $post_type ) {
+			if( post_type_supports($post_type, 'comments') ) {
+				remove_post_type_support($post_type, 'comments');
+				remove_post_type_support($post_type, 'trackbacks');
+			}
+		}
+	}
+
+	// hide elements in admin
 	function admin_head_css() {
 		?>
 		<style type="text/css">
@@ -42,7 +61,7 @@ class MODSite extends TimberSite {
 		<?php
 	}
 
-	// WP admin login styles
+	// admin login styles
 	function style_login() {
 		?>
 		<style type="text/css">
@@ -65,24 +84,29 @@ class MODSite extends TimberSite {
 	}
 
 	// enqueue styles & scripts
-	function enqueue_scripts() {
+	function mod_enqueue_scripts() {
 		$version = filemtime( get_stylesheet_directory() . '/style.css' );
-		wp_enqueue_style( 'core-css', get_stylesheet_directory_uri() . '/style.css', [], $version );
-		wp_enqueue_style( 'block-css', get_stylesheet_directory_uri() . '/custom-blocks.css', [], $version );
-		wp_enqueue_script( 'slick-js', get_template_directory_uri() . '/assets/js/slick.min.js', ['jquery'], '1.8.1' );
-		wp_enqueue_script( 'mfp-js', get_template_directory_uri() . '/assets/js/mfp.min.js', ['jquery'], '1.1.0' );
-		wp_enqueue_script( 'datatables-js', get_template_directory_uri() . '/assets/js/datatables.js', ['jquery'], '1.13.1' );
-		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery', 'slick-js', 'mfp-js', 'datatables-js'], $version );
-		wp_enqueue_script( 'theme-editor', get_template_directory_uri() . '/assets/js/editor.js', [], $version );
+		wp_enqueue_style( 'mod-css', get_stylesheet_directory_uri() . '/style.css', [], $version );
+		wp_enqueue_script( 'mod-js', get_template_directory_uri() . '/assets/js/site-dist.js', ['jquery'], $version );
+
+		if( ! is_admin() ) {
+			wp_dequeue_style( 'wp-block-library' );
+			wp_dequeue_style( 'wp-block-library-theme' );
+		}
 	}
 
-	// Custom context helper functions (callable)
+	// enqueue block editor styles
+	function mod_enqueue_editor_scripts() {
+		$version = filemtime( get_stylesheet_directory() . '/custom-blocks.css' );
+		wp_enqueue_style( 'mod-editor-css', get_stylesheet_directory_uri() . '/custom-blocks.css', [], $version );
+	}
+
+	// Custom context helper functions
 	function add_to_context( $context ) {
 		$context['site']           = $this;
-		$context['date']           = date( 'F j, Y' );
-		$context['date_year']      = date( 'Y' );
-		$context['options']        = get_fields( 'option' );
-		$context['home_url']       = home_url( '/' );
+		$context['date']           = date('F j, Y');
+		$context['date_year']      = date('Y');
+		$context['home_url']       = home_url('/');
 		$context['is_front_page']  = is_front_page();
 		$context['is_singular']    = is_singular();
 		$context['get_url']        = $_SERVER['REQUEST_URI'];
@@ -93,8 +117,7 @@ class MODSite extends TimberSite {
 	// Menus / Theme Support / ACF Options Page
 	function after_setup_theme() {
 		add_theme_support( 'menus' );
-		register_nav_menu( 'primary', 'Top Navigation' );
-		register_nav_menu( 'secondary', 'Footer Navigation' );
+		register_nav_menu( 'primary', 'Primary Navigation' );
 
 		add_theme_support( 'align-wide' );
 		add_theme_support( 'post-thumbnails' );
@@ -102,7 +125,7 @@ class MODSite extends TimberSite {
 		add_editor_style( 'custom-blocks.css' );
 		add_theme_support( 'disable-custom-colors' );
 
-		// create option pages for things like footer data and company info/logos
+		// create an acf option page section
 		if( function_exists( 'acf_add_options_page' ) ) {
 			$parent = acf_add_options_page([
 				'page_title'      => 'Main Options',
@@ -127,13 +150,6 @@ class MODSite extends TimberSite {
 				'menu_title'  => __( 'Contact' ),
 				'parent_slug' => $parent['menu_slug'],
 			]);
-
-			// Social Settings
-			$child = acf_add_options_sub_page([
-				'page_title'  => __( 'Social Settings' ),
-				'menu_title'  => __( 'Social' ),
-				'parent_slug' => $parent['menu_slug'],
-			]);
 		}
 	}
 
@@ -142,7 +158,7 @@ class MODSite extends TimberSite {
 		require 'custom-block-functions.php';
 	}
 
-	// creates a custom block category for our theme-specific blocks
+	// create a custom block category for our theme-specific blocks
 	function mod_block_category( $categories, $post ) {
 		return array_merge(
 			$categories, [
@@ -160,14 +176,12 @@ class MODSite extends TimberSite {
 	}
 
 	// remove unused items from admin menu
-	// to show Posts and Comments Admin Pages - delete this function and the action hook
 	function admin_menu_cleanup() {
 		remove_menu_page( 'edit.php' ); // Posts
 		remove_menu_page( 'edit-comments.php' ); // Comments
 	}
 
 	// removed comment column from posts pages
-	// to show comment counts - delete this function and the action hook
 	function remove_pages_count_columns( $defaults ) {
 		unset($defaults['comments']);
 		return $defaults;
@@ -185,11 +199,14 @@ function mod_render_primary_menu() {
 	]);
 }
 
-// secondary site navigation
-function mod_render_secondary_menu() {
-	wp_nav_menu([
-		'theme_location' => 'secondary',
-		'container'      => false,
-		'menu_id'        => 'secondary-menu',
-	]);
+// disable jQuery Migrate
+function mod_disable_jqmigrate($scripts) {
+	if( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
+		$script = $scripts->registered['jquery'];
+
+		if( $script->deps ) {
+			$script->deps = array_diff( $script->deps, ['jquery-migrate'] );
+		}
+	}
 }
+add_action( 'wp_default_scripts', 'mod_disable_jqmigrate' );

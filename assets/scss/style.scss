@@ -2,30 +2,23 @@
 	Author: Shane Schroll
 	Theme Name: Modular
 	Description: Modular theme and blocks.
-	Version: 1.2.7
+	Version: 1.3.0
 	Text Domain: mod
 */
 
 // Import Dependencies
 @import 'packages/normalize'; 		// soft reset
 @import 'variables'; 				// colors / fonts / mq sizes / custom mixins
-@import 'globals'; 					// default globals for certain elements core post wrapper setup
+@import 'globals'; 					// default globals
 @import 'typography'; 				// fonts / sizes / spacing / alignment
-@import 'packages/mfp'; 			// Magnific Popup Add-in
-@import 'packages/slick-theme'; 	// Slick slider base styles
-@import 'packages/datatables';		// datatables default styles
 
-// Import Components
-@import 'components/xbar'; 			// navigation x-bar style and animation
-@import 'components/notice-banner'; // top of page notice banner
-@import 'components/social-links'; 	// flexible social icon row
+// Import Other Packages
+@import 'packages/xbar'; 			// nav x-bar style and animation
 
 // Import Chunks
-@import 'navigation';				// main site naviagtion - desktop+mobile
+@import 'navigation';				// main site navigation
 @import 'header';					// main site header/special items below the nav
 @import 'footer';					// main site footer
 
 // Import Templates
 @import 'home';    					// home page template
-@import 'about';   					// about page template
-@import 'contact'; 					// contact page template

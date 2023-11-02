@@ -1,10 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es6": true,
     "es2020": true,
-    "node": true,
-    "jquery": true
+    "node": true
   },
   "extends": "eslint:recommended",
   "globals": {
@@ -19,8 +17,8 @@
     }
   },
   "rules": {
-    "semi": [2, "always"],
-    "no-inner-declarations": "off",
-    "no-undef": "off"
+  "semi": [2, "always"],
+  "no-inner-declarations": "off",
+  "no-undef": "off"
   }
 }

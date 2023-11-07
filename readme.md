@@ -4,11 +4,13 @@ This theme works out-of-the-box with no build steps required.
 It is for developers, not end users - This is a dev setup for creating new themes or websites but is not a full theme itself.  
 
 ### What's included?
-This theme is primarily built on Timber and ACF. If you do not want to use ACF, there are fallbacks in the theme or you can remove the function calls entirely (recommended) along with `acf-json` folder. There are also a lot of niceties and paths pre-setup. It is recommended to use [PrePros (free)](https://prepros.io/) as the preprocessor for SCSS and JS files and a config with paths/maps is already included. You can also use your own tools but you will need to set those up.  
+This theme is primarily built on Timber and ACF. If you do not want to use ACF, there are fallbacks in the theme or you can remove the function calls entirely (recommended) along with `acf-json` folder.  
+
+There are also a lot of niceties and paths pre-setup. It is recommended to use [PrePros (free)](https://prepros.io/) as the preprocessor for SCSS and JS files and a config with paths/maps is already included. You can also use your own tools but you will need to set those up.  
 
 The ACF functions included allow for blocks to be built quickly AND utilizes Timber for blocks too! Blocks are added to `custom-block-functions.php` and are rendered with Timber in the `templates/blocks/acf/` directory.  
 
-Do not install the Timber plugin. Support is ending in favor of the composer build, which is the only way to get Version 2.  
+Do not install the Timber plugin with V2 installed. Support is ending in favor of the composer build, which is the only way to get Version 2.  
 Timber V2 is already installed which supports PHP 8.2.  
 
 ### To Install (V2)

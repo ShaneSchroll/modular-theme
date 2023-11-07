@@ -7,6 +7,8 @@
 			$('.notice-banner .close-notice').on('click', function() {
 				$(this).parent().hide();
 			});
+
+            // maybe add cookies to keep it closed on subsequent visits
 		});
 
 		// accessible accordion block - controls and aria events for screenreaders

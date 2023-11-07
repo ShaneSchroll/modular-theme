@@ -6,7 +6,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 // Initialize timber
 Timber\Timber::init();
 
-// Change 'views' directory to 'templates'
+// Tell Timber where to load twig files from
 Timber::$locations = __DIR__ . '/templates';
 
 class MODSite extends Timber\Site {

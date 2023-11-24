@@ -15,7 +15,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-# Ruby
-.sass-cache
-config.rb
